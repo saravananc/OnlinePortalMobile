@@ -25,9 +25,9 @@ const MainTabNavigator = () => {
         },
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Billing" component={BillingScreen} />
+      <Tab.Screen name="Dashboard" component={DashboardScreen} options={{headerShown:false}} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{headerShown:false}}/>
+      <Tab.Screen name="Billing" component={BillingScreen} options={{headerShown:false}}/>
     </Tab.Navigator>
   );
 };

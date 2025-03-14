@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
     getToken().then(token => {
       if (token) {
         // Optionally, fetch user info using token
-        setUser({ token, name: 'John Doe' }); // Replace with real user data
+        setUser({ token, name:user.userFirstName}); // Replace with real user data
       }
       setLoading(false);
     });
@@ -23,18 +23,33 @@ export const AuthProvider = ({ children }) => {
 
   const signIn = async (credentials) => {
     try {
-      setLoading(true);
-      const response = await apiSignIn(credentials);
-      if (response.token) {
-        await storeToken(response.token);
-        setUser({ ...response.user, token: response.token });
-      }
+        setLoading(true);
+        const response = await apiSignIn(credentials);
+        console.log(response);
+
+        if (response.status && response.data.length > 1) {
+            const userData = response.data[0]; // Extract user details
+            const tokenData = response.data[1]; // Extract token details
+
+            const user = {
+                userId: userData.userId,
+                userFirstName: userData.userFirstName,
+                refType: userData.refType,
+                roleId: userData.roleId,
+                AccessToken: tokenData.AccessToken,
+                RefreshToken: tokenData.RefreshToken
+            };
+
+            await storeToken(tokenData.AccessToken);
+            setUser(user);
+        }
     } catch (error) {
-      throw error;
+        throw error;
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   const signOut = async () => {
     try {
